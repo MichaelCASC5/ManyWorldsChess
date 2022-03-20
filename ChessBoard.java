@@ -80,7 +80,7 @@ public class ChessBoard{
             pX = (mX-(x-offset)) / scale + 1;
             pY = tiles - (mY-(y-offset)) / scale;
             
-            System.out.println(e.getButton());
+            // System.out.println(e.getButton());
             if(e.getButton() == 1){
                 // System.out.println(tiles/2 + (mX-x) / scale);
                 // System.out.println(tiles/2 + (mY-y) / scale);
