@@ -5,7 +5,7 @@ import javax.swing.ImageIcon;
 
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
-
+import java.awt.AlphaComposite;
 
 public class Piece{
     private String name;
@@ -16,7 +16,12 @@ public class Piece{
     private int player;
 
     private boolean movement;
+    private boolean toRemove;
+    private boolean isChild;
     private ImageIcon sprite;
+
+    private int children;
+    private Piece parent;
 
     private int[] corner = new int[3];
 
@@ -41,6 +46,13 @@ public class Piece{
         player = 0;
 
         movement = false;
+        toRemove = false;
+        // isClone = false;
+        isChild = false;
+
+        children = 0;
+        parent = new Piece("");
+
         sprite = new ImageIcon(Driver.class.getResource("\\images\\" + name + ".png"));
     }
     public void loop(int bX, int bY, int bOffset, int bScale, int tiles){
@@ -104,6 +116,31 @@ public class Piece{
     public boolean getMovement(){
         return movement;
     }
+    public void setToRemove(boolean b){
+        toRemove = b;
+    }
+    public boolean getToRemove(){
+        return toRemove;
+    }
+    public void setChild(boolean b){
+        isChild = b;
+    }
+    public boolean isChild(){
+        return !parent.getName().equals("");
+        // return isChild;
+    }
+    public void setParent(Piece p){
+        parent = p;
+    }
+    public Piece getParent(){
+        return parent;
+    }
+    public void setChildren(int n){
+        children = n;
+    }
+    public int getChildren(){
+        return children;
+    }
     // public void set(int a, int b, int s){
     //     x = a + s/8;
     //     y = b + s/8;
@@ -130,6 +167,10 @@ public class Piece{
         posX = p.getPosX();
         posY = p.getPosY();
         movement = p.getMovement();
+        toRemove = p.getToRemove();
+        isChild = p.isChild();
+        // children = p.getChildren();
+        parent = p.getParent();
         sprite = p.getSprite();
     }
     public void draw(Graphics g){
@@ -159,6 +200,15 @@ public class Piece{
 
         //Drawing Image
         Image image = sprite.getImage();
-        g.drawImage(image, x, y, scale, scale, null);
+        if(!toRemove || movement){
+            g.drawImage(image, x, y, scale, scale, null);
+        }else{
+            Graphics2D g2d = (Graphics2D) g.create();
+            AlphaComposite acomp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .25f);
+            g2d.setComposite(acomp);
+            g2d.drawImage(image, x, y, scale, scale, null);
+
+            g2d.dispose();
+        }
     }
 }

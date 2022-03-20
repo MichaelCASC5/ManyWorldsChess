@@ -41,7 +41,12 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
         tb.draw(g);
     }
     public void loop(){
-        cb.loop();
+        try{
+            cb.loop();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
         repaint();
     }
     public void keyPressed(KeyEvent e){
@@ -53,7 +58,8 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     public void keyTyped(KeyEvent e){
     }
     public void mousePressed(MouseEvent e){
-        cb.pressed(e);
+        if(!tb.isOpen())
+            cb.pressed(e);
         tb.pressed(e);
     }
     public void mouseReleased(MouseEvent e){

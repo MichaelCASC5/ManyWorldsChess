@@ -66,6 +66,7 @@ public class ChessBoard{
         pieces.add(new Piece("b_king",'E',8));
     }
     public void pressed(MouseEvent e){
+        Piece p;
         // System.out.println((x-offset) + ", " + (y-offset));
         // System.out.println(e.getX() + ", " + e.getY());
         // System.out.println(x%scale);
@@ -91,12 +92,15 @@ public class ChessBoard{
                 // System.out.println(pX + ", " + pY);
                 System.out.println("move: " + move);
 
-                Piece p;
                 if(move){
                     boolean spaceOccupied;
                     spaceOccupied = false;
+
+                    //Selecting Pieces
                     for(int i=0;i<pieces.size();i++){
-                        if(pieces.get(i).getPosX() == pX && pieces.get(i).getPosY() == pY){
+                        p = pieces.get(i);
+
+                        if(p.getPosX() == pX && p.getPosY() == pY){
                             spaceOccupied = true;
                             
                             /*
@@ -104,44 +108,57 @@ public class ChessBoard{
                                 * the containing if statment for more conventional
                                 * single-piece at a time chess movement
                             */
-                            if(pieces.get(i).getMovement()){
-                                pieces.get(i).setMovement(false);
+                            if(p.getMovement()){
+                                p.setMovement(false);
                                 move = false;
                             }
                         }
                     }
                     System.out.println("spaceOccupied: " + spaceOccupied);
 
+                    //Placing Children
                     if(!spaceOccupied){
                         toMove.setPosX(pX);
                         toMove.setPosY(pY);
                         
-                        p = new Piece("");
-                        p.setAll(toMove);
-                        pieces.add(p);
+                        Piece copyPiece = new Piece("");
+                        copyPiece.setAll(toMove);
+                        copyPiece.getParent().setChildren(copyPiece.getParent().getChildren() + 1);
+                        // copyPiece.setChild(true);
+                        pieces.add(copyPiece);
                         // move = false;
                     }
                 }else{
                     for(int i=0;i<pieces.size();i++){
+                        p = pieces.get(i);
                         // System.out.println(pieces.get(i).getName() + ": " + pieces.get(i).getPosX() + "," + pieces.get(i).getPosY());
-                        if(pieces.get(i).getPosX() == pX && pieces.get(i).getPosY() == pY){
-                            System.out.println(pieces.get(i).getName() + " is here");
-                            toMove.setAll(pieces.get(i));
+                        if(p.getPosX() == pX && p.getPosY() == pY && !p.isChild()){
+                            // System.out.println(p.getName() + " is here");
+                            toMove.setAll(p);
+                            // toMove.setClone(true);
+                            toMove.setParent(p);
                             move = true;
-                            pieces.get(i).displayPosition();
-                            pieces.get(i).setMovement(true);
+                            // p.displayPosition();
+                            p.setMovement(true);
+                            // p.setToRemove(true);
+                            // System.out.println(p);
                         }
                     }
                 }
                 System.out.println("pieces size: " + pieces.size());
             }else if(e.getButton() == 3){
                 for(int i=0;i<pieces.size();i++){
-                    pieces.get(i).displayPosition();
-                    System.out.println(pX + ", " + pY);
-                    if(pieces.get(i).getPosX() == pX && pieces.get(i).getPosY() == pY){
+                    p = pieces.get(i);
+
+                    // p.displayPosition();
+                    // System.out.println(pX + ", " + pY);
+                    // if(p.getPosX() == pX && p.getPosY() == pY && !p.getMovement()){
+                    if(p.getPosX() == pX && p.getPosY() == pY && p.isChild()){
+                        p.getParent().setChildren(p.getParent().getChildren() - 1);
+
                         pieces.remove(i);
                         i--;
-                        System.out.println("remove");
+                        // System.out.println("remove");
                     }
                 }
             }
@@ -159,10 +176,22 @@ public class ChessBoard{
     public void loop(){
         offset = (scale/2) * tiles;
 
+        Piece p;
         for(int i=0;i<pieces.size();i++){
+            p = pieces.get(i);
             // pieces.get(i).set(i*scale + x-offset,y-offset,scale);
             // System.out.println(pieces.get(i).getPosition());
-            pieces.get(i).loop(x,y,offset,scale,tiles);
+            p.loop(x,y,offset,scale,tiles);
+
+            // if(p.isClone()){
+            //     p.getParent().setToRemove(true);
+            // }
+            if(p.getChildren() > 0){
+                p.setToRemove(true);
+                // System.out.println("children " + p.getChildren());
+            }else{
+                p.setToRemove(false);
+            }
         }
 
         // if(Math.random() < 0.025){

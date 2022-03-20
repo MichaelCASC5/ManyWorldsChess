@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class Toolbar{
     private int width;
     private int height;
+
+    private boolean open;
     
     private String[] tools = {
         "File",
@@ -23,40 +25,87 @@ public class Toolbar{
     public Toolbar(int w){
         width = w;
         height = 20;
+
+        open = false;
         
         String[] drop0 = {
-            "New",
+            "New File",
+            "New Window",
+            "/break",
+            "Open File...",
+            "Open Folder...",
+            "Open Recent",
+            "/break",
+            "Save",
+            "Save As...",
+            "Save All",
+            "/break",
+            "Auto Save",
+            "Preferences",
+            "/break",
+            "Close Editor",
+            "Close Window",
             "/break",
             "Exit",
         };
-        drop[0] = new Drop(drop0, 125);
+        drop[0] = new Drop(drop0, 200);
         
         String[] drop1 = {
-            "Edit_Thing",
-            "Edit_Thing1",
+            "Undo",
+            "Redo",
+            "/break",
+            "Cut",
+            "Copy",
+            "Paste",
+            "/break",
+            "Find",
+            "Replace",
         };
         drop[1] = new Drop(drop1, 150);
         
         String[] drop2 = {
-            "View_Thing",
-            "View_Thing1",
+            "Appearance",
+            "Editor Layout",
+            "/break",
+            "Search",
+            "Run",
+            "Extensions",
+            "/break",
+            "Output",
+            "Terminal",
         };
         drop[2] = new Drop(drop2, 150);
         
         String[] drop3 = {
-            "How To",
-            "Information",
-            "Credits",
+            "Get Started",
+            "Show All Commands",
+            "Documentation",
+            "Release Notes",
+            "/break",
+            "Join Us",
+            "Report Issue",
+            "/break",
+            "View License",
+            "Privacy Statement",
+            "/break",
+            "Check for Updates...",
+            "/break",
+            "About",
         };
-        drop[3] = new Drop(drop3, 110);
+        drop[3] = new Drop(drop3, 180);
     }
     public int getHeight(){
         return height;
     }
+    public boolean isOpen(){
+        return open;
+    }
     public void pressed(MouseEvent e){
+        open = false;
         for(int i=0;i<hov.length;i++){
             if(hov[i] && !drop[i].getDisplay()){
                 drop[i].setDisplay(true);
+                open = true;
             }else{
                 drop[i].setDisplay(false);
                 drop[i].pressed(e);
