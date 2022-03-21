@@ -34,7 +34,7 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
         gui.addMouseMotionListener(this);
     }
     public void paintComponent(Graphics g){
-        g.setColor(Color.black);
+        g.setColor(new Color(25,25,25));
         g.fillRect(0,0,WIDTH,HEIGHT);
 
         cb.draw(g);
@@ -51,7 +51,10 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     }
     public void keyPressed(KeyEvent e){
         int key = e.getKeyCode();
-        System.out.println(key);
+
+        if(key == 32){
+            cb.flipPlayer();
+        }
     }
     public void keyReleased(KeyEvent e){
     }

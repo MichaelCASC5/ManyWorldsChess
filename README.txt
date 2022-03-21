@@ -1,5 +1,10 @@
 Michael Calle - Many Worlds Chess
 
+*** HOW TO LAUNCH ***
+
+    It's very easy. Go the command line, navigate to the directory the program resides in, and enter the command: javac *.java;java Driver.java
+    This will compile and execute the code. Please note that you will need Java installed to be able to do this.
+
 *** DESCRIPTION ***
 
     The purpose of this program is to play with the idea of a quantum Chess game. Although my understanding of the theory of quantum physics is not the strongest, I created this program with this in mind:
@@ -18,11 +23,6 @@ Michael Calle - Many Worlds Chess
         ...
 
         1. This program is a work in progress. For that reason the two users, upon moving a piece, must also go the extra step and let the computer know what all possible next states for any one piece are. One day the computer will do this automatically and the players will only be required to move one piece per Chessboard at a time, but right now that is not possible.
-
-*** HOW TO LAUNCH ***
-
-    It's very easy. Go the command line, navigate to the directory the program resides in, and enter the command: javac *.java;java Driver.java
-    This will compile and execute the code. Please note that you will need Java installed to be able to do this.
 
 Thank you for visiting my projects!
 - Michael Calle

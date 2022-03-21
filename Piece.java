@@ -44,6 +44,9 @@ public class Piece{
         // scale = s - (s/8)*2;
         scale = 0;
         player = 0;
+        if(name.substring(0,2).equals("b_")){
+            player = 1;
+        }
 
         movement = false;
         toRemove = false;
@@ -108,7 +111,13 @@ public class Piece{
         player = n;
     }
     public int getPlayer(){
-        return player;
+        int output = 0;
+
+        if(name.substring(0,2).equals("b_")){
+            output = 1;
+        }
+
+        return output;
     }
     public void setMovement(boolean b){
         movement = b;

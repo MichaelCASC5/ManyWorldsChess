@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,8 @@ public class ChessBoard{
     private boolean move;
     private Piece toMove;
     private ArrayList<Piece> pieces;
+
+    private int player;
     
     public ChessBoard(int WIDTH, int HEIGHT){
         // this.WIDTH = WIDTH;//JavaGraphicsError
@@ -26,7 +29,7 @@ public class ChessBoard{
         offset = 0;
 
         tiles = 8;
-        scale = 80;
+        scale = 76;
 
         toMove = new Piece("w_pawn",'A',0);
         pieces = new ArrayList<>();
@@ -34,6 +37,7 @@ public class ChessBoard{
         offset = (scale/2) * tiles;
         // offset*=tiles;
         move = false;
+        player = 0;
         chessInit();
     }
     public void chessInit(){
@@ -65,6 +69,23 @@ public class ChessBoard{
         pieces.add(new Piece("b_queen",'D',8));
         pieces.add(new Piece("b_king",'E',8));
     }
+    public boolean mouseOverBoard(){
+        return ((mX > x-offset && mX < x + offset) && (mY > y-offset && mY < y + offset));
+    }
+    public void flipPlayer(){
+        player = (player + 1) % 2;
+
+        Piece p;
+        for(int i=0;i<pieces.size();i++){
+            p = pieces.get(i);
+
+            if(p.getToRemove()){
+                pieces.remove(i);
+                i--;
+                // System.out.println("here");
+            }
+        }
+    }
     public void pressed(MouseEvent e){
         Piece p;
         // System.out.println((x-offset) + ", " + (y-offset));
@@ -75,8 +96,7 @@ public class ChessBoard{
         int pX, pY;
         pX = 0;
         pY = 0;
-        if((mX > x-offset && mX < x + scale*tiles) && (mY > y-offset && mY < y + scale*tiles)){
-
+        if(mouseOverBoard()){
             pX = (mX-(x-offset)) / scale + 1;
             pY = tiles - (mY-(y-offset)) / scale;
             
@@ -96,11 +116,12 @@ public class ChessBoard{
                     boolean spaceOccupied;
                     spaceOccupied = false;
 
-                    //Selecting Pieces
+                    //DEselecting Pieces
                     for(int i=0;i<pieces.size();i++){
                         p = pieces.get(i);
 
-                        if(p.getPosX() == pX && p.getPosY() == pY){
+                        if(p.getPosX() == pX && p.getPosY() == pY){// && p.getPlayer() == player
+                            System.out.println("here: " + p.getPlayer() + " " + player);
                             spaceOccupied = true;
                             
                             /*
@@ -111,6 +132,8 @@ public class ChessBoard{
                             if(p.getMovement()){
                                 p.setMovement(false);
                                 move = false;
+                                // System.out.println(p.getPlayer());
+                                // player = p.getPlayer();
                             }
                         }
                     }
@@ -129,10 +152,11 @@ public class ChessBoard{
                         // move = false;
                     }
                 }else{
+                    //Selecting Pieces
                     for(int i=0;i<pieces.size();i++){
                         p = pieces.get(i);
                         // System.out.println(pieces.get(i).getName() + ": " + pieces.get(i).getPosX() + "," + pieces.get(i).getPosY());
-                        if(p.getPosX() == pX && p.getPosY() == pY && !p.isChild()){
+                        if(p.getPosX() == pX && p.getPosY() == pY && !p.isChild() && p.getPlayer() == player){
                             // System.out.println(p.getName() + " is here");
                             toMove.setAll(p);
                             // toMove.setClone(true);
@@ -200,18 +224,23 @@ public class ChessBoard{
         // }
     }
     public void draw(Graphics g){
+        //Board edge
+        // g.setColor(new Color(218,138,52));
+        g.setColor(new Color(159,73,2));
+        g.fillRect(x-offset-(scale/(3)),y-offset-(scale/3),(tiles*scale)+(scale/3)*2,(tiles*scale)+(scale/3)*2);
+
         boolean checkerShade;
         checkerShade = false;
         
-        g.setColor(Color.lightGray);
+        g.setColor(new Color(228,148,62));//light
         for(int i=0;i<tiles;i++){
             for(int j=0;j<tiles;j++){
                 if(j != 0){
                     if(checkerShade){
-                        g.setColor(Color.lightGray);
+                        g.setColor(new Color(228,148,62));//light
                         checkerShade = false;
                     }else{
-                        g.setColor(Color.gray);
+                        g.setColor(new Color(189,103,22));//dark
                         checkerShade = true;
                     }
                 }
@@ -220,15 +249,32 @@ public class ChessBoard{
         }
         
         //Hover Tiles
-        g.setColor(new Color(255,255,255,100));
+        if(mouseOverBoard()){
+            g.setColor(new Color(255,255,255,100));
+            g.fillRect(((mX-(x%scale))/ scale) * scale + x%scale,((mY-(y%scale))/ scale) * scale + y%scale,scale,scale);
+            // g.drawRect(mX,mY,scale,scale);
+        }
+        
         // if(mX-7 < (x + scale*tiles))
         // g.drawRect(((mX-7 - scale/2) / scale) * scale,((mY-30 - scale/2) / scale ) * scale + y-offset,scale,scale);
         // g.drawRect((mX / scale) * scale - (x%scale) + scale/2,0,scale,scale);
-        g.fillRect(((mX-(x%scale))/ scale) * scale + x%scale,((mY-(y%scale))/ scale) * scale + y%scale,scale,scale);
-        g.drawRect(mX,mY,scale,scale);
         
         for(int i=0;i<pieces.size();i++){
             pieces.get(i).draw(g);
         }
+
+        //Drawing Text
+        Font font = new Font("Times", Font.BOLD, scale/4);
+        g.setFont(font);
+        String text;
+        text = " to move";
+        if(player == 0){
+            text = "White" + text;
+            g.setColor(Color.white);
+        }else{
+            text = "Black" + text;
+            g.setColor(Color.black);
+        }
+        g.drawString(text,x-offset-(scale/15),y-offset-(scale/15));
     }
 }
