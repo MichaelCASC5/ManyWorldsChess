@@ -23,6 +23,8 @@ public class Piece{
     private int children;
     private Piece parent;
 
+    private boolean capture;
+
     private int[] corner = new int[3];
 
     public Piece(String str){
@@ -55,6 +57,8 @@ public class Piece{
 
         children = 0;
         parent = new Piece("");
+
+        capture = false;
 
         sprite = new ImageIcon(Driver.class.getResource("\\images\\" + name + ".png"));
     }
@@ -150,6 +154,12 @@ public class Piece{
     public int getChildren(){
         return children;
     }
+    public void setCapture(boolean b){
+        capture = b;
+    }
+    public boolean isCapture(){
+        return capture;
+    }
     // public void set(int a, int b, int s){
     //     x = a + s/8;
     //     y = b + s/8;
@@ -178,6 +188,7 @@ public class Piece{
         movement = p.getMovement();
         toRemove = p.getToRemove();
         isChild = p.isChild();
+        capture = p.isCapture();
         // children = p.getChildren();
         parent = p.getParent();
         sprite = p.getSprite();

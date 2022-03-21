@@ -2,7 +2,7 @@ Michael Calle - Many Worlds Chess
 
 *** HOW TO LAUNCH ***
 
-    It's very easy. Go the command line, navigate to the directory the program resides in, and enter the command: javac *.java;java Driver.java
+    It's very easy. Go to the command line, navigate to the directory the program resides in, and enter the command: javac *.java;java Driver.java
     This will compile and execute the code. Please note that you will need Java installed to be able to do this.
 
 *** DESCRIPTION ***

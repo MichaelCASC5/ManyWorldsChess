@@ -61,8 +61,9 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     public void keyTyped(KeyEvent e){
     }
     public void mousePressed(MouseEvent e){
-        if(!tb.isOpen())
+        if(!tb.isOpen()){
             cb.pressed(e);
+        }
         tb.pressed(e);
     }
     public void mouseReleased(MouseEvent e){
@@ -79,6 +80,10 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     }
     public void mouseDragged(MouseEvent e){
     }
+    // public void mouseWheelMoved(MouseWheelEvent e){
+    //     int key = e.getScrollType();
+    //     System.out.println(e.getWheelRotation());
+    // }
     public void start(final int ticks){
         Thread gameThread = new Thread(){
             public void run(){
@@ -91,7 +96,7 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
                     }
                 }
             }
-        };	
+        };
         gameThread.start();
     }
     public static void main(String[] args){
