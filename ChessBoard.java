@@ -20,8 +20,10 @@ public class ChessBoard{
     private ArrayList<Piece> pieces;
 
     private int player;
+
+    private int boardType;
     
-    public ChessBoard(int WIDTH, int HEIGHT){
+    public ChessBoard(int WIDTH, int HEIGHT, int n){
         // this.WIDTH = WIDTH;//JavaGraphicsError
         // this.HEIGHT = HEIGHT;
         x = WIDTH/2-8;//JavaGraphicsError
@@ -32,15 +34,24 @@ public class ChessBoard{
         scale = 76;
 
         toMove = new Piece("w_pawn",'A',0);
-        pieces = new ArrayList<>();
 
         offset = (scale/2) * tiles;
         // offset*=tiles;
         move = false;
         player = 0;
-        chessInit();
+
+        boardType = n;
+        init();
+    }
+    public void init(){
+        if(boardType == 0){
+            chessInit();
+        }else if(boardType == 1){
+            checkersInit();
+        }
     }
     public void chessInit(){
+        pieces = new ArrayList<>();
         // for(int i=0;i<tiles;i++){
             // pieces.add(new Piece("b_pawn",i*scale + x-offset,y-offset + (scale),scale));
             // pieces.add(new Piece("w_pawn",i*scale + x-offset,y-offset + (scale*6),scale));
@@ -68,6 +79,21 @@ public class ChessBoard{
         pieces.add(new Piece("b_bishop",'F',8));
         pieces.add(new Piece("b_queen",'D',8));
         pieces.add(new Piece("b_king",'E',8));
+    }
+    public void checkersInit(){
+        pieces = new ArrayList<>();
+        
+        for(int i=0;i<8;i+=2){
+            pieces.add(new Piece("b_c_checker",(char)(i + 97),7));
+            pieces.add(new Piece("w_c_checker",(char)(i + 97),1));
+            pieces.add(new Piece("w_c_checker",(char)(i + 97),3));
+        }
+
+        for(int i=1;i<8;i+=2){
+            pieces.add(new Piece("b_c_checker",(char)(i + 97),6));
+            pieces.add(new Piece("w_c_checker",(char)(i + 97),2));
+            pieces.add(new Piece("b_c_checker",(char)(i + 97),8));
+        }
     }
     public boolean mouseOverBoard(){
         return ((mX > x-offset && mX < x + offset) && (mY > y-offset && mY < y + offset));
@@ -97,6 +123,9 @@ public class ChessBoard{
             move = false;
         }
     }
+    // public void reset(){
+    //     init();
+    // }
     public void pressed(MouseEvent e){
         Piece p;
         // System.out.println((x-offset) + ", " + (y-offset));
@@ -147,10 +176,14 @@ public class ChessBoard{
                                 * the containing if statment for more conventional
                                 * single-piece at a time chess movement
                             */
-                            if(p.getMovement()){
-                                p.setMovement(false);
-                                move = false;
-                            }
+                            // if(p.getMovement()){
+                            //     p.setMovement(false);
+                            //     move = false;
+                            // }
+                        }
+                        if(p.getMovement()){
+                            p.setMovement(false);
+                            move = false;
                         }
                     }
                     System.out.println("spaceOccupied: " + spaceOccupied);
@@ -203,11 +236,15 @@ public class ChessBoard{
                     // p.displayPosition();
                     // System.out.println(pX + ", " + pY);
                     // if(p.getPosX() == pX && p.getPosY() == pY && !p.getMovement()){
-                    if(p.getPosX() == pX && p.getPosY() == pY && p.isChild() && p.getPlayer() == player){
-                        p.getParent().setChildren(p.getParent().getChildren() - 1);
-    
-                        pieces.remove(i);
-                        i--;
+                    if(p.getPosX() == pX && p.getPosY() == pY){
+                        if(p.isChild() && p.getPlayer() == player){
+                            p.getParent().setChildren(p.getParent().getChildren() - 1);
+        
+                            pieces.remove(i);
+                            i--;
+                        }else if(p.getPlayer() != player){
+                            p.setCapture(false);
+                        }
                         // System.out.println("remove");
                     }
                 }

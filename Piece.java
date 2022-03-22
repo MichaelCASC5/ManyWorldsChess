@@ -176,7 +176,7 @@ public class Piece{
         return corner;
     }
     public void displayPosition(){
-        System.out.println("" + posX + ", " + posY);
+        System.out.println("" + posX + ", " + posY + " " + name);
     }
     public void setAll(Piece p){
         name = p.getName();

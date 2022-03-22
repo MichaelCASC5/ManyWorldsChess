@@ -16,7 +16,7 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
         HEIGHT = 720;
 
         tb = new Toolbar(WIDTH);
-        cb = new ChessBoard(WIDTH,HEIGHT);
+        cb = new ChessBoard(WIDTH,HEIGHT,0);
         
         //Setting up the GUI
         JFrame gui = new JFrame();
@@ -54,6 +54,8 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
 
         if(key == 32){
             cb.flipPlayer();
+        }else{
+            cb.init();
         }
     }
     public void keyReleased(KeyEvent e){
